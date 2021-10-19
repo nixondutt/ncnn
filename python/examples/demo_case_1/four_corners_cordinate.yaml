@@ -1,0 +1,136 @@
+A1:
+- !!python/tuple
+  - 33
+  - 517
+- !!python/tuple
+  - 88
+  - 504
+- !!python/tuple
+  - 238
+  - 668
+- !!python/tuple
+  - 34
+  - 716
+- !!python/tuple
+  - 135
+  - 592
+  - A1
+A2:
+- !!python/tuple
+  - 92
+  - 499
+- !!python/tuple
+  - 219
+  - 451
+- !!python/tuple
+  - 406
+  - 577
+- !!python/tuple
+  - 238
+  - 663
+- !!python/tuple
+  - 249
+  - 538
+  - A2
+A3:
+- !!python/tuple
+  - 226
+  - 451
+- !!python/tuple
+  - 320
+  - 431
+- !!python/tuple
+  - 512
+  - 520
+- !!python/tuple
+  - 417
+  - 575
+- !!python/tuple
+  - 369
+  - 485
+  - A3
+A4:
+- !!python/tuple
+  - 330
+  - 431
+- !!python/tuple
+  - 386
+  - 410
+- !!python/tuple
+  - 594
+  - 473
+- !!python/tuple
+  - 514
+  - 520
+- !!python/tuple
+  - 453
+  - 463
+  - A4
+A5:
+- !!python/tuple
+  - 408
+  - 413
+- !!python/tuple
+  - 477
+  - 387
+- !!python/tuple
+  - 655
+  - 431
+- !!python/tuple
+  - 596
+  - 470
+- !!python/tuple
+  - 531
+  - 422
+  - A5
+B1:
+- !!python/tuple
+  - 27
+  - 354
+- !!python/tuple
+  - 33
+  - 352
+- !!python/tuple
+  - 66
+  - 401
+- !!python/tuple
+  - 28
+  - 413
+- !!python/tuple
+  - 46
+  - 377
+  - B1
+B2:
+- !!python/tuple
+  - 39
+  - 355
+- !!python/tuple
+  - 92
+  - 346
+- !!python/tuple
+  - 159
+  - 378
+- !!python/tuple
+  - 71
+  - 402
+- !!python/tuple
+  - 99
+  - 366
+  - B2
+B3:
+- !!python/tuple
+  - 95
+  - 341
+- !!python/tuple
+  - 159
+  - 326
+- !!python/tuple
+  - 226
+  - 360
+- !!python/tuple
+  - 160
+  - 381
+- !!python/tuple
+  - 160
+  - 350
+  - B3

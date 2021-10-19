@@ -23,7 +23,26 @@ import time
 import yaml
 from ncnn.utils import IoU
 
+# Loading data and box cordinates files
+
+parking_box_label = sys.argv[2]
+with open(parking_box_label) as file:
+    parsed_yaml_file = yaml.load(file, Loader = yaml.FullLoader)
+four_corners = parsed_yaml_file['four_corners']
+rectangle_cordinates = parsed_yaml_file['rectangle_cordinates']
+cd_ones_dict = IoU.process_color_box_one(four_corners)
+bb_twos = IoU.process_selected_box(rectangle_cordinates)
+
+
+
 def draw_detection_objects(image, class_names, objects, min_prob=0.0):
+    for ID, cordinates in cd_ones_dict.items():
+    im0s = cv2.line(im0s,cordinates[0], cordinates[1],(247,174,7),2)
+    im0s = cv2.line(im0s,cordinates[1], cordinates[2],(247,174,7),2)
+    im0s = cv2.line(im0s,cordinates[2], cordinates[3],(247,174,7),2)
+    im0s = cv2.line(im0s,cordinates[3], cordinates[0],(247,174,7),2)
+    midx, midy = cordinates[4][0], cordinates[4][1]
+    im0s = cv2.putText(im0s, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA) 
     for obj in objects:
         if obj.prob < min_prob:
             continue
@@ -89,8 +108,9 @@ if __name__ == "__main__":
     num_threads=4,
     use_gpu=False,
 )
+    
     while cap.isOpened():
-            
+        
         # m = cv2.imread(imagepath)
         ret, m = cap.read()
         if m is None:
