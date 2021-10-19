@@ -67,14 +67,10 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
                 else:
                     break # going to check for the next car
 
-        print(
-            "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
-            % (obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.w, obj.rect.h)
-        )
-        print(
-            "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
-            % (obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.w, obj.rect.h)
-        )
+        # print(
+        #     "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
+        #     % (obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.w, obj.rect.h)
+        # )
 
         cv2.rectangle(
             image,
@@ -111,6 +107,7 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
             0.5,
             (0, 0, 0),
         )
+
     return image
 
     # cv2.imshow("image", image)
@@ -125,6 +122,9 @@ if __name__ == "__main__":
 
     imagepath = sys.argv[1]
     cap = cv2.VideoCapture(imagepath)
+    frame_width = int(cap.get(3))
+    frame_height = int(cap.get(4))
+    out = cv2.VideoWriter('../data/output.mp4', cv2.VideoWriter_fourcc('M','J','P','G'),30,(frame_width,frame_height))
     net = get_model(
     "yolov5s",
     target_size=640,
@@ -145,10 +145,21 @@ if __name__ == "__main__":
 
         start_time = time.time()
         objects = net(m)
-
+        fps_obj = 1.0/(time.time() - start_time)
         image = draw_detection_objects(m, net.class_names, objects)
         fps = 1.0/(time.time() - start_time)
-        print(f'FPS:  :{fps}')
+        print('FPS for park allot + obj det:  %.2f and FPS for obj_det:   %.2f'%(fps,fps_obj))
+        cv2.putText(
+            image,
+            'FPS : %.2f'%fps_obj,
+            (120, 46),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (210, 20, 85),
+            1,
+            cv2.LINE_AA
+        )
+        out.write(image)
         cv2.imshow('frame',image)
         if cv2.waitKey(1) & 0xff == ord('q'):
             break
