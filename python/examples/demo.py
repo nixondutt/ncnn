@@ -44,9 +44,9 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
         midx, midy = cordinates[4][0], cordinates[4][1]
         image = cv2.putText(image, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA) 
     for obj in objects:
-        if obj.prob < min_prob:
+        if int(obj.label)!= 2 or obj.prob < min_prob:
             continue
-        framebox = [int(obj.rect.x), int(obj.rect.y), (int(obj.rect.x + obj.rect.w), int(obj.rect.y + obj.rect.h)]
+        framebox = [int(obj.rect.x), int(obj.rect.y), int(obj.rect.x + obj.rect.w), int(obj.rect.y + obj.rect.h)]
         for ID, box1 in bb_twos.items():
             check = True
             if check: # if check true, box1 is not checked yet
@@ -55,10 +55,10 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
                     check = False
                     cd_box = cd_ones_dict[ID]
                     for cord in range(0,len(cd_box)-2):
-                        im0s = cv2.line(im0s,cd_box[cord],cd_box[cord+1],(7,7,247),2)
-                        im0s = cv2.line(im0s,cd_box[cord+1],cd_box[0],(7,7,247),2)  #for forth line
-                        midx, midy = cd_box[cord+2][0], cd_box[cord+2][1]                          # cordinates of text   Code added at 2/8/2021
-                        im0s = cv2.putText(im0s, str(cd_box[cord+2][2]), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,7,247),1,cv2.LINE_AA)
+                        image = cv2.line(image,cd_box[cord],cd_box[cord+1],(7,7,247),2)
+                    image = cv2.line(image,cd_box[cord+1],cd_box[0],(7,7,247),2)  #for forth line
+                    midx, midy = cd_box[cord+2][0], cd_box[cord+2][1]                          # cordinates of text   Code added at 2/8/2021
+                    image = cv2.putText(image, str(cd_box[cord+2][2]), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,7,247),1,cv2.LINE_AA)
 
             else:
                 break # going to check for the next car
