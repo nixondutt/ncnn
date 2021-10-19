@@ -37,12 +37,12 @@ bb_twos = IoU.process_selected_box(rectangle_cordinates)
 
 def draw_detection_objects(image, class_names, objects, min_prob=0.0):
     for ID, cordinates in cd_ones_dict.items():
-    im0s = cv2.line(im0s,cordinates[0], cordinates[1],(247,174,7),2)
-    im0s = cv2.line(im0s,cordinates[1], cordinates[2],(247,174,7),2)
-    im0s = cv2.line(im0s,cordinates[2], cordinates[3],(247,174,7),2)
-    im0s = cv2.line(im0s,cordinates[3], cordinates[0],(247,174,7),2)
-    midx, midy = cordinates[4][0], cordinates[4][1]
-    im0s = cv2.putText(im0s, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA) 
+        image = cv2.line(image,cordinates[0], cordinates[1],(247,174,7),2)
+        image = cv2.line(image,cordinates[1], cordinates[2],(247,174,7),2)
+        image = cv2.line(image,cordinates[2], cordinates[3],(247,174,7),2)
+        image = cv2.line(image,cordinates[3], cordinates[0],(247,174,7),2)
+        midx, midy = cordinates[4][0], cordinates[4][1]
+        image = cv2.putText(image, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA) 
     for obj in objects:
         if obj.prob < min_prob:
             continue
