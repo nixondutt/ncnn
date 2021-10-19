@@ -42,26 +42,30 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
         image = cv2.line(image,cordinates[2], cordinates[3],(247,174,7),2)
         image = cv2.line(image,cordinates[3], cordinates[0],(247,174,7),2)
         midx, midy = cordinates[4][0], cordinates[4][1]
-        image = cv2.putText(image, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA) 
+        image = cv2.putText(image, str(ID), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,247,57),1,cv2.LINE_AA)
+    idDict = {} 
     for obj in objects:
         if int(obj.label)!= 2 or obj.prob < min_prob:
             continue
         framebox = [int(obj.rect.x), int(obj.rect.y), int(obj.rect.x + obj.rect.w), int(obj.rect.y + obj.rect.h)]
         for ID, box1 in bb_twos.items():
-            check = True
-            if check: # if check true, box1 is not checked yet
-                IOU = IoU.iou(box1, framebox)
-                if IOU > 0.40:
-                    check = False
-                    cd_box = cd_ones_dict[ID]
-                    for cord in range(0,len(cd_box)-2):
-                        image = cv2.line(image,cd_box[cord],cd_box[cord+1],(7,7,247),2)
-                    image = cv2.line(image,cd_box[cord+1],cd_box[0],(7,7,247),2)  #for forth line
-                    midx, midy = cd_box[cord+2][0], cd_box[cord+2][1]                          # cordinates of text   Code added at 2/8/2021
-                    image = cv2.putText(image, str(cd_box[cord+2][2]), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,7,247),1,cv2.LINE_AA)
+            # if lot is already taken, it will not be check for the next car
+            if ID not in idDict: 
+                check = True
+                if check: # if check true, box1 is not checked yet
+                    IOU = IoU.iou(box1, framebox)
+                    if IOU > 0.40:
+                        check = False
+                        cd_box = cd_ones_dict[ID]
+                        for cord in range(0,len(cd_box)-2):
+                            image = cv2.line(image,cd_box[cord],cd_box[cord+1],(7,7,247),2)
+                        image = cv2.line(image,cd_box[cord+1],cd_box[0],(7,7,247),2)  #for forth line
+                        midx, midy = cd_box[cord+2][0], cd_box[cord+2][1]                          # cordinates of text   Code added at 2/8/2021
+                        image = cv2.putText(image, str(cd_box[cord+2][2]), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,7,247),1,cv2.LINE_AA)
+                        idDict[ID] = True
 
-            else:
-                break # going to check for the next car
+                else:
+                    break # going to check for the next car
 
         print(
             "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
