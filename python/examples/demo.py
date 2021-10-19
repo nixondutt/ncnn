@@ -46,7 +46,27 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
     for obj in objects:
         if obj.prob < min_prob:
             continue
+        framebox = [int(obj.rect.x), int(obj.rect.y), (int(obj.rect.x + obj.rect.w), int(obj.rect.y + obj.rect.h)]
+        for ID, box1 in bb_twos.items():
+            check = True
+            if check: # if check true, box1 is not checked yet
+                IOU = IoU.iou(box1, framebox)
+                if IOU > 0.40:
+                    check = False
+                    cd_box = cd_ones_dict[ID]
+                    for cord in range(0,len(cd_box)-2):
+                        im0s = cv2.line(im0s,cd_box[cord],cd_box[cord+1],(7,7,247),2)
+                        im0s = cv2.line(im0s,cd_box[cord+1],cd_box[0],(7,7,247),2)  #for forth line
+                        midx, midy = cd_box[cord+2][0], cd_box[cord+2][1]                          # cordinates of text   Code added at 2/8/2021
+                        im0s = cv2.putText(im0s, str(cd_box[cord+2][2]), (midx,midy), cv2.FONT_HERSHEY_SIMPLEX,.5, (7,7,247),1,cv2.LINE_AA)
 
+            else:
+                break # going to check for the next car
+
+        print(
+            "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
+            % (obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.w, obj.rect.h)
+        )
         print(
             "%d = %.5f at %.2f %.2f %.2f x %.2f\n"
             % (obj.label, obj.prob, obj.rect.x, obj.rect.y, obj.rect.w, obj.rect.h)
@@ -58,6 +78,7 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
             (int(obj.rect.x + obj.rect.w), int(obj.rect.y + obj.rect.h)),
             (255, 0, 0),
         )
+        
 
         text = "%s %.1f%%" % (class_names[int(obj.label)], obj.prob * 100)
 
@@ -129,4 +150,5 @@ if __name__ == "__main__":
             break
     cap.release()
     cv2.destroyAllWindows()
+
 
