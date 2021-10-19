@@ -31,7 +31,7 @@ with open(parking_box_label) as file:
 four_corners = parsed_yaml_file['four_corners']
 rectangle_cordinates = parsed_yaml_file['rectangle_cordinates']
 cd_ones_dict = IoU.process_color_box_one(four_corners)
-bb_twos = IoU.process_selected_box(rectangle_cordinates)
+bb_twos = IoU.process_selected_box_two(rectangle_cordinates)
 
 
 
@@ -94,7 +94,7 @@ def draw_detection_objects(image, class_names, objects, min_prob=0.0):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("Usage: %s [imagepath]\n" % (sys.argv[0]))
         sys.exit(0)
 

@@ -1,2 +1,2 @@
-four_corners : demo_data/four_corners_cordinate.yaml
-rectangle_cordinates: demo_data/rectangle_cordinates.yaml
+four_corners : demo_case_1/four_corners_cordinate.yaml
+rectangle_cordinates: demo_case_1/rectangle_cordinates.yaml
