@@ -25,6 +25,10 @@
 #include <float.h>
 #include <stdio.h>
 #include <vector>
+#include<iostream>
+using namespace cv;
+using namespace std;
+
 
 #define YOLOV5_V60 1 //YOLOv5 v6.0
 
@@ -478,27 +482,86 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
     cv::waitKey(0);
 }
 
+int test_pla(const String file){
+    cv::VideoCapture cap(file);
+    if (cap.isOpened() == false){
+        cout << "Cannot open the video file\n";
+        cin.get(); // waiting for any key press
+        return -1;
+    }
+    //get the frame rate of the video
+
+    double fps = cap.get(CAP_PROP_FPS);
+    cout << "Frame per seconds are "<< fps << endl;
+
+    int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH)); // get the width of the frame of the video
+    int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT)); //get the height of the frame of the video
+
+    Size frame_size(frame_width, frame_height);
+    int frame_per_second = 30;
+
+    //create and initialize the video writer object
+    VideoWriter oVideoWriter("../data/modified.avi", VideoWriter::fourcc('M','J','P','G'), frame_per_second, frame_size, true);
+
+    if (oVideoWriter.isOpened() == false)
+        {
+            cout << "Cannot save the video to a file\n" << endl;
+            cin.get(); // wait for any key press
+            return -1;
+        }
+        
+    while (true){
+
+        Mat frame;
+
+        bool bSuccess = cap.read(frame); // read a new frame
+
+        // break the while loop if frames cannot be read from the camera
+
+        if (bSuccess == false){
+            cout << "Unable to read file/n";
+            cin.get(); // wait for any key press
+            break;
+
+        }
+
+
+        //write the frame to the file
+
+        oVideoWriter.write(frame);
+
+        cout << "Frame per second is " << fps <<"\n";
+
+    }
+    //Flush and close the video file
+    oVideoWriter.release();
+
+
+
+}
+
 int main(int argc, char** argv)
 {
-    if (argc != 2)
-    {
-        fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
-        return -1;
-    }
+    // if (argc != 2)
+    // {
+    //     fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
+    //     return -1;
+    // }
 
-    const char* imagepath = argv[1];
+    // const char* imagepath = argv[1];
 
-    cv::Mat m = cv::imread(imagepath, 1);
-    if (m.empty())
-    {
-        fprintf(stderr, "cv::imread %s failed\n", imagepath);
-        return -1;
-    }
+    // cv::Mat m = cv::imread(imagepath, 1);
+    // if (m.empty())
+    // {
+    //     fprintf(stderr, "cv::imread %s failed\n", imagepath);
+    //     return -1;
+    // }
 
-    std::vector<Object> objects;
-    detect_yolov5(m, objects);
+    // std::vector<Object> objects;
+    // detect_yolov5(m, objects);
 
-    draw_objects(m, objects);
+    // draw_objects(m, objects);
+    test_pla(argv[1]);
 
     return 0;
 }
