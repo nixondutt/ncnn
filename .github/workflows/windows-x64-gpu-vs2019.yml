@@ -12,6 +12,7 @@ on:
     - 'src/layer/vulkan/**'
     - 'tests/**'
     - 'tools/**'
+    - '!tools/pnnx/**'
     - 'examples/**'
   pull_request:
     branches: [master]
@@ -25,6 +26,7 @@ on:
     - 'src/layer/vulkan/**'
     - 'tests/**'
     - 'tools/**'
+    - '!tools/pnnx/**'
     - 'examples/**'
 jobs:
   windows-vs2019-gpu:
@@ -39,7 +41,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-windows-install
@@ -59,7 +61,7 @@ jobs:
         $installer.WaitForExit();
     - name: cache-swiftshader
       id: cache-swiftshader
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: swiftshader-install
         key: swiftshader-windows-install-20211002

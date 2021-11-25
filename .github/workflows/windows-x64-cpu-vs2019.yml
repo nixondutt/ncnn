@@ -11,6 +11,7 @@ on:
     - 'src/layer/x86/**'
     - 'tests/**'
     - 'tools/**'
+    - '!tools/pnnx/**'
     - 'examples/**'
   pull_request:
     branches: [master]
@@ -23,6 +24,7 @@ on:
     - 'src/layer/x86/**'
     - 'tests/**'
     - 'tools/**'
+    - '!tools/pnnx/**'
     - 'examples/**'
 jobs:
   windows-vs2019:
@@ -35,7 +37,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-windows-install
