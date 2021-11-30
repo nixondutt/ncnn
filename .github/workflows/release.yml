@@ -5,7 +5,7 @@ on:
       - '*'
 
 env:
-  DEVELOPER_DIR: /Applications/Xcode_12.2.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
   EMSCRIPTEN_VERSION: 2.0.8
 
 jobs:
@@ -216,7 +216,7 @@ jobs:
     steps:
     - name: cache-openmp
       id: cache-openmp
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: openmp-install
         key: openmp-macos-release-11.0.0
@@ -433,7 +433,7 @@ jobs:
     steps:
     - name: cache-openmp
       id: cache-openmp
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: openmp-install
         key: openmp-ios-release-11.0.0
@@ -661,7 +661,7 @@ jobs:
     steps:
     - name: cache-openmp
       id: cache-openmp
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: openmp-install
         key: openmp-ios-bitcode-release-11.0.0
@@ -1017,7 +1017,7 @@ jobs:
         submodules: true
     - name: cache-vulkansdk
       id: cache-vulkansdk
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "1.2.189.0"
         key: vulkansdk-linux-x86_64-1.2.189.0
@@ -1097,7 +1097,7 @@ jobs:
         submodules: true
     - name: cache-vulkansdk
       id: cache-vulkansdk
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "1.2.189.0"
         key: vulkansdk-linux-x86_64-1.2.189.0
@@ -1242,7 +1242,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2015-x86-x64-install
@@ -1287,8 +1287,6 @@ jobs:
         mkdir ${{ env.PACKAGENAME }}
         mkdir ${{ env.PACKAGENAME }}/x86
         mkdir ${{ env.PACKAGENAME }}/x64
-        mkdir ${{ env.PACKAGENAME }}/x86/bin
-        mkdir ${{ env.PACKAGENAME }}/x64/bin
         Copy-Item -Verbose -Recurse -Path "build-x86\install\*" -Destination "${{ env.PACKAGENAME }}\x86"
         Copy-Item -Verbose -Recurse -Path "build-x64\install\*" -Destination "${{ env.PACKAGENAME }}\x64"
         Copy-Item -Verbose -Path "build-x86\tools\caffe\Release\caffe2ncnn.exe" -Destination "${{ env.PACKAGENAME }}\x86\bin"
@@ -1327,7 +1325,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2015-x86-x64-install
@@ -1410,7 +1408,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2017-x86-x64-install
@@ -1455,8 +1453,6 @@ jobs:
         mkdir ${{ env.PACKAGENAME }}
         mkdir ${{ env.PACKAGENAME }}/x86
         mkdir ${{ env.PACKAGENAME }}/x64
-        mkdir ${{ env.PACKAGENAME }}/x86/bin
-        mkdir ${{ env.PACKAGENAME }}/x64/bin
         Copy-Item -Verbose -Recurse -Path "build-x86\install\*" -Destination "${{ env.PACKAGENAME }}\x86"
         Copy-Item -Verbose -Recurse -Path "build-x64\install\*" -Destination "${{ env.PACKAGENAME }}\x64"
         Copy-Item -Verbose -Path "build-x86\tools\caffe\Release\caffe2ncnn.exe" -Destination "${{ env.PACKAGENAME }}\x86\bin"
@@ -1495,7 +1491,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2017-x86-x64-install
@@ -1578,7 +1574,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2019-x86-x64-install
@@ -1623,8 +1619,6 @@ jobs:
         mkdir ${{ env.PACKAGENAME }}
         mkdir ${{ env.PACKAGENAME }}/x86
         mkdir ${{ env.PACKAGENAME }}/x64
-        mkdir ${{ env.PACKAGENAME }}/x86/bin
-        mkdir ${{ env.PACKAGENAME }}/x64/bin
         Copy-Item -Verbose -Recurse -Path "build-x86\install\*" -Destination "${{ env.PACKAGENAME }}\x86"
         Copy-Item -Verbose -Recurse -Path "build-x64\install\*" -Destination "${{ env.PACKAGENAME }}\x64"
         Copy-Item -Verbose -Path "build-x86\tools\caffe\Release\caffe2ncnn.exe" -Destination "${{ env.PACKAGENAME }}\x86\bin"
@@ -1663,7 +1657,7 @@ jobs:
         submodules: true
     - name: cache-protobuf
       id: cache-protobuf
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: "protobuf-install"
         key: protobuf-vs2019-x86-x64-install

@@ -23,7 +23,7 @@ on:
     - 'src/layer/arm/**'
     - 'src/layer/vulkan/**'
 env:
-  DEVELOPER_DIR: /Applications/Xcode_12.2.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_12.4.app/Contents/Developer
 jobs:
   ios-iphone-os-gpu:
     runs-on: macos-latest
@@ -37,7 +37,7 @@ jobs:
         submodules: true
     - name: cache-openmp
       id: cache-openmp
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@v2.1.7
       with:
         path: openmp-install
         key: openmp-ios-install-20201213-4

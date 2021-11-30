@@ -487,7 +487,8 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
 int test_pla(const String file,  std::vector<Object>& objects){
     
     cv::VideoCapture cap(file);
-    if (cap.isOpened() == false){
+    if (cap.isOpened() == false)
+    {
         cout << "Cannot open the video file\n";
         cin.get(); // waiting for any key press
         return -1;
@@ -497,24 +498,25 @@ int test_pla(const String file,  std::vector<Object>& objects){
     double fps = cap.get(CAP_PROP_FPS);
     //cout << "Frame per seconds are "<< fps << endl;
 
-    int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH)); // get the width of the frame of the video
+    int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));   // get the width of the frame of the video
     int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT)); //get the height of the frame of the video
 
     Size frame_size(frame_width, frame_height);
     int frame_per_second = 30;
 
     //create and initialize the video writer object
-    VideoWriter oVideoWriter("../data/modified.avi", VideoWriter::fourcc('M','J','P','G'), frame_per_second, frame_size, true);
+    VideoWriter oVideoWriter("../data/modified.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'), frame_per_second, frame_size, true);
 
     if (oVideoWriter.isOpened() == false)
-        {
-            cout << "Cannot save the video to a file\n" << endl;
-            cin.get(); // wait for any key press
-            return -1;
-        }
-        
-    while (true){
+    {
+        cout << "Cannot save the video to a file\n"
+             << endl;
+        cin.get(); // wait for any key press
+        return -1;
+    }
 
+    while (true)
+    {
         Mat frame;
 
         bool bSuccess = cap.read(frame); // read a new frame
@@ -525,7 +527,6 @@ int test_pla(const String file,  std::vector<Object>& objects){
             cout << "Unable to read file/n";
             cin.get(); // wait for any key press
             break;
-
         }
         detect_yolov5(frame, objects);
         draw_objects(frame, objects);
@@ -541,9 +542,6 @@ int test_pla(const String file,  std::vector<Object>& objects){
     }
     //Flush and close the video file
     oVideoWriter.release();
-
-
-
 }
 
 int main(int argc, char** argv)
