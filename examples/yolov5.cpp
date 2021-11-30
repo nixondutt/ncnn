@@ -25,7 +25,7 @@
 #include <float.h>
 #include <stdio.h>
 #include <vector>
-#include<iostream>
+#include <iostream>
 #include <ctime>
 using namespace cv;
 using namespace std;
@@ -456,7 +456,7 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
         const Object& obj = objects[i];
 
         // fprintf(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
-                // obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
+        // obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
 
         cv::rectangle(image, obj.rect, cv::Scalar(255, 0, 0));
 
@@ -484,8 +484,8 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
     //cv::waitKey(0);
 }
 
-int test_pla(const String file,  std::vector<Object>& objects){
-    
+int test_pla(const String file, std::vector<Object>& objects)
+{
     cv::VideoCapture cap(file);
     if (cap.isOpened() == false)
     {
@@ -542,14 +542,13 @@ int test_pla(const String file,  std::vector<Object>& objects){
         oVideoWriter.write(frame);
 
         //cout << "Frame per second is " << fps <<"\n";
-
     }
     //Flush and close the video file
     oVideoWriter.release();
 }
 
 int main(int argc, char** argv)
-{   
+{
     if (argc != 2)
     {
         fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
@@ -570,8 +569,6 @@ int main(int argc, char** argv)
     // detect_yolov5(m, objects);
 
     // draw_objects(m, objects);
-    
-
 
     return 0;
 }
