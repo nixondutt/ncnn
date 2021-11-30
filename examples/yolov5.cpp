@@ -26,8 +26,10 @@
 #include <stdio.h>
 #include <vector>
 #include<iostream>
+#include <ctime>
 using namespace cv;
 using namespace std;
+
 
 
 #define YOLOV5_V60 1 //YOLOv5 v6.0
@@ -453,13 +455,13 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
     {
         const Object& obj = objects[i];
 
-        fprintf(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
-                obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
+        // fprintf(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
+                // obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
 
         cv::rectangle(image, obj.rect, cv::Scalar(255, 0, 0));
 
         char text[256];
-        sprintf(text, "%s %.1f%%", class_names[obj.label], obj.prob * 100);
+        // sprintf(text, "%s %.1f%%", class_names[obj.label], obj.prob * 100);
 
         int baseLine = 0;
         cv::Size label_size = cv::getTextSize(text, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
@@ -478,11 +480,12 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
                     cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
     }
 
-    cv::imshow("image", image);
-    cv::waitKey(0);
+    //cv::imshow("image", image);
+    //cv::waitKey(0);
 }
 
-int test_pla(const String file){
+int test_pla(const String file,  std::vector<Object>& objects){
+    
     cv::VideoCapture cap(file);
     if (cap.isOpened() == false){
         cout << "Cannot open the video file\n";
@@ -492,7 +495,7 @@ int test_pla(const String file){
     //get the frame rate of the video
 
     double fps = cap.get(CAP_PROP_FPS);
-    cout << "Frame per seconds are "<< fps << endl;
+    //cout << "Frame per seconds are "<< fps << endl;
 
     int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH)); // get the width of the frame of the video
     int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT)); //get the height of the frame of the video
@@ -517,20 +520,23 @@ int test_pla(const String file){
         bool bSuccess = cap.read(frame); // read a new frame
 
         // break the while loop if frames cannot be read from the camera
-
+        const clock_t begin_time = clock();
         if (bSuccess == false){
             cout << "Unable to read file/n";
             cin.get(); // wait for any key press
             break;
 
         }
-
+        detect_yolov5(frame, objects);
+        draw_objects(frame, objects);
+        double dur = float(clock() - begin_time)/CLOCKS_PER_SEC;
+        std :: cout << "FPS : " << float(1/dur) << "\n";
 
         //write the frame to the file
 
         oVideoWriter.write(frame);
 
-        cout << "Frame per second is " << fps <<"\n";
+        //cout << "Frame per second is " << fps <<"\n";
 
     }
     //Flush and close the video file
@@ -541,27 +547,29 @@ int test_pla(const String file){
 }
 
 int main(int argc, char** argv)
-{
-    // if (argc != 2)
-    // {
-    //     fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
-    //     return -1;
-    // }
+{   
+    if (argc != 2)
+    {
+        fprintf(stderr, "Usage: %s [imagepath]\n", argv[0]);
+        return -1;
+    }
 
-    // const char* imagepath = argv[1];
+    const char* filepath = argv[1];
 
-    // cv::Mat m = cv::imread(imagepath, 1);
+    // // cv::Mat m = cv::imread(filepath, 1);
     // if (m.empty())
     // {
-    //     fprintf(stderr, "cv::imread %s failed\n", imagepath);
+    //     fprintf(stderr, "cv::imread %s failed\n", filepath);
     //     return -1;
     // }
 
-    // std::vector<Object> objects;
+    std::vector<Object> objects;
+    test_pla(filepath, objects);
     // detect_yolov5(m, objects);
 
     // draw_objects(m, objects);
-    test_pla(argv[1]);
+    
+
 
     return 0;
 }
