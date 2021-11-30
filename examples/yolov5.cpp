@@ -30,8 +30,6 @@
 using namespace cv;
 using namespace std;
 
-
-
 #define YOLOV5_V60 0 //YOLOv5 v6.0
 
 #if YOLOV5_V60
@@ -518,24 +516,24 @@ int test_pla(const String file, std::vector<Object>& objects)
     cap >> frame;
     while (!frame.empty())
     {
-        
         cap >> frame;
         //bool bSuccess = cap.read(frame); // read a new frame
 
         // break the while loop if frames cannot be read from the camera
         const clock_t begin_time = clock();
-        
-        if (frame.empty()){
+
+        if (frame.empty())
+        {
             cout << "Unable to read file/n";
             cin.get(); // wait for any key press
             break;
         }
-        
+
         detect_yolov5(frame, objects);
-        double dur = float(clock() - begin_time)/CLOCKS_PER_SEC;
+        double dur = float(clock() - begin_time) / CLOCKS_PER_SEC;
         draw_objects(frame, objects);
         //double dur = float(clock() - begin_time)/CLOCKS_PER_SEC;
-        std :: cout << "FPS : " << float(1/dur) << "\n";
+        std ::cout << "FPS : " << float(1 / dur) << "\n";
 
         //write the frame to the file
 
