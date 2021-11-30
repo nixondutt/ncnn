@@ -273,8 +273,6 @@ static void generate_proposals(const ncnn::Mat& anchors, int stride, const ncnn:
 
 static int detect_yolov5(const ncnn::Net& yolov5, const cv::Mat& bgr, std::vector<Object>& objects)
 {
-
-
     const int target_size = 640;
     const float prob_threshold = 0.25f;
     const float nms_threshold = 0.45f;
@@ -339,27 +337,27 @@ static int detect_yolov5(const ncnn::Net& yolov5, const cv::Mat& bgr, std::vecto
     // }
 
     // stride 16
-//     {
-//         ncnn::Mat out;
-// #if YOLOV5_V60
-//         ex.extract("376", out);
-// #else
-//         ex.extract("781", out);
-// #endif
+    //     {
+    //         ncnn::Mat out;
+    // #if YOLOV5_V60
+    //         ex.extract("376", out);
+    // #else
+    //         ex.extract("781", out);
+    // #endif
 
-//         ncnn::Mat anchors(6);
-//         anchors[0] = 30.f;
-//         anchors[1] = 61.f;
-//         anchors[2] = 62.f;
-//         anchors[3] = 45.f;
-//         anchors[4] = 59.f;
-//         anchors[5] = 119.f;
+    //         ncnn::Mat anchors(6);
+    //         anchors[0] = 30.f;
+    //         anchors[1] = 61.f;
+    //         anchors[2] = 62.f;
+    //         anchors[3] = 45.f;
+    //         anchors[4] = 59.f;
+    //         anchors[5] = 119.f;
 
-//         std::vector<Object> objects16;
-//         generate_proposals(anchors, 16, in_pad, out, prob_threshold, objects16);
+    //         std::vector<Object> objects16;
+    //         generate_proposals(anchors, 16, in_pad, out, prob_threshold, objects16);
 
-//         proposals.insert(proposals.end(), objects16.begin(), objects16.end());
-//     }
+    //         proposals.insert(proposals.end(), objects16.begin(), objects16.end());
+    //     }
 
     // stride 32
     {
@@ -528,11 +526,11 @@ int test_pla(const String file, std::vector<Object>& objects)
             cin.get(); // wait for any key press
             break;
         }
-        
+
         detect_yolov5(yolov5, frame, objects);
         double dur = float(clock() - begin_time) / CLOCKS_PER_SEC;
         draw_objects(frame, objects);
-        
+
         std ::cout << "FPS : " << float(1 / dur) << "\n";
 
         //write the frame to the file
