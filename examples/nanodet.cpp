@@ -25,7 +25,11 @@
 #include <float.h>
 #include <stdio.h>
 #include <vector>
+#include <iostream>
+#include <ctime>
 
+using namespace cv;
+using namespace std;
 struct Object
 {
     cv::Rect_<float> rect;
@@ -217,24 +221,24 @@ static void generate_proposals(const ncnn::Mat& cls_pred, const ncnn::Mat& dis_p
     }
 }
 
-static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
+static int detect_nanodet(const ncnn::Net& nanodet, const cv::Mat& bgr, std::vector<Object>& objects)
 {
-    ncnn::Net nanodet;
+    // ncnn::Net nanodet;
 
-    nanodet.opt.use_vulkan_compute = true;
-    // nanodet.opt.use_bf16_storage = true;
+    // nanodet.opt.use_vulkan_compute = true;
+    // // nanodet.opt.use_bf16_storage = true;
 
-    // original pretrained model from https://github.com/RangiLyu/nanodet
-    // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
-    nanodet.load_param("nanodet_m.param");
-    nanodet.load_model("nanodet_m.bin");
+    // // original pretrained model from https://github.com/RangiLyu/nanodet
+    // // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
+    // nanodet.load_param("nanodet_m.param");
+    // nanodet.load_model("nanodet_m.bin");
 
     int width = bgr.cols;
     int height = bgr.rows;
 
-    const int target_size = 320;
+    const int target_size = 640;
     const float prob_threshold = 0.4f;
-    const float nms_threshold = 0.5f;
+    const float nms_threshold = 0.3f;
 
     // pad to multiple of 32
     int w = width;
@@ -345,7 +349,7 @@ static int detect_nanodet(const cv::Mat& bgr, std::vector<Object>& objects)
     return 0;
 }
 
-static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
+static cv::Mat draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
 {
     static const char* class_names[] = {
         "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train", "truck", "boat", "traffic light",
@@ -365,8 +369,9 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
     {
         const Object& obj = objects[i];
 
-        fprintf(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
-                obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
+        if (obj.label == 2 || obj.label == 7){
+        // fprintf(stderr, "%d = %.5f at %.2f %.2f %.2f x %.2f\n", obj.label, obj.prob,
+        //         obj.rect.x, obj.rect.y, obj.rect.width, obj.rect.height);
 
         cv::rectangle(image, obj.rect, cv::Scalar(255, 0, 0));
 
@@ -389,9 +394,82 @@ static void draw_objects(const cv::Mat& bgr, const std::vector<Object>& objects)
         cv::putText(image, text, cv::Point(x, y + label_size.height),
                     cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
     }
+    }
+    return image;
 
-    cv::imshow("image", image);
-    cv::waitKey(0);
+    // cv::imshow("image", image);
+    // cv::waitKey(0);
+}
+
+
+int test_pla(const char* file, std::vector<Object>& objects)
+{
+    ncnn::Net nanodet;
+
+    nanodet.opt.use_vulkan_compute = true;
+    // nanodet.opt.use_bf16_storage = true;
+
+    // original pretrained model from https://github.com/RangiLyu/nanodet
+    // the ncnn model https://github.com/nihui/ncnn-assets/tree/master/models
+    nanodet.load_param("nanodet_m.param");
+    nanodet.load_model("nanodet_m.bin");
+    cv::VideoCapture cap(file);
+    if (cap.isOpened() == false)
+    {
+        cout << "Cannot open the video file\n";
+        cin.get(); // waiting for any key press
+        return -1;
+    }
+    //get the frame rate of the video
+
+    // double fps = cap.get(CAP_PROP_FPS);
+    //cout << "Frame per seconds are "<< fps << endl;
+
+    int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));   // get the width of the frame of the video
+    int frame_height = static_cast<int>(cap.get(CAP_PROP_FRAME_HEIGHT)); //get the height of the frame of the video
+
+    Size frame_size(frame_width, frame_height);
+    int frame_per_second = 8;
+
+    //create and initialize the video writer object
+    VideoWriter oVideoWriter("../data/modified.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'), frame_per_second, frame_size, true);
+
+    if (oVideoWriter.isOpened() == false)
+    {
+        cout << "Cannot save the video to a file\n"
+             << endl;
+        cin.get(); // wait for any key press
+        return -1;
+    }
+
+    while (true)
+    {
+        Mat frame;
+
+        bool bSuccess = cap.read(frame); // read a new frame
+
+        // break the while loop if frames cannot be read from the camera
+        if (bSuccess == false)
+        {
+            cout << "Unable to read file/n";
+            cin.get(); // wait for any key press
+            break;
+        }
+        const clock_t begin_time = clock();
+        detect_nanodet(nanodet, frame, objects);
+        double dur = float(clock() - begin_time) / CLOCKS_PER_SEC;
+        frame = draw_objects(frame, objects);
+        
+        std ::cout << "FPS : " << float(1 / dur) << "\n";
+
+        //write the frame to the file
+
+        oVideoWriter.write(frame);
+
+        //cout << "Frame per second is " << fps <<"\n";
+    }
+    //Flush and close the video file
+    oVideoWriter.release();
 }
 
 int main(int argc, char** argv)
@@ -402,19 +480,23 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    const char* imagepath = argv[1];
+    // const char* imagepath = argv[1];
 
-    cv::Mat m = cv::imread(imagepath, 1);
-    if (m.empty())
-    {
-        fprintf(stderr, "cv::imread %s failed\n", imagepath);
-        return -1;
-    }
+    // cv::Mat m = cv::imread(imagepath, 1);
+    // if (m.empty())
+    // {
+    //     fprintf(stderr, "cv::imread %s failed\n", imagepath);
+    //     return -1;
+    // }
 
+    // std::vector<Object> objects;
+    // detect_nanodet(m, objects);
+
+    // draw_objects(m, objects);
+
+    const char* filepath = argv[1];
     std::vector<Object> objects;
-    detect_nanodet(m, objects);
-
-    draw_objects(m, objects);
+    test_pla(filepath, objects);
 
     return 0;
 }
