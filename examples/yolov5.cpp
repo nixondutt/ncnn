@@ -30,7 +30,7 @@
 using namespace cv;
 using namespace std;
 
-#define YOLOV5_V60 1 //YOLOv5 v6.0
+#define YOLOV5_V60 0 //YOLOv5 v6.0
 
 #if YOLOV5_V60
 #define MAX_STRIDE 64
@@ -493,7 +493,7 @@ int test_pla(const String file, std::vector<Object>& objects)
     }
     //get the frame rate of the video
 
-    double fps = cap.get(CAP_PROP_FPS);
+    //double fps = cap.get(CAP_PROP_FPS);
     //cout << "Frame per seconds are "<< fps << endl;
 
     int frame_width = static_cast<int>(cap.get(CAP_PROP_FRAME_WIDTH));   // get the width of the frame of the video
@@ -512,24 +512,27 @@ int test_pla(const String file, std::vector<Object>& objects)
         cin.get(); // wait for any key press
         return -1;
     }
-
-    while (true)
+    Mat frame;
+    cap >> frame;
+    while (!frame.empty())
     {
-        Mat frame;
-
-        bool bSuccess = cap.read(frame); // read a new frame
+        cap >> frame;
+        //bool bSuccess = cap.read(frame); // read a new frame
 
         // break the while loop if frames cannot be read from the camera
         const clock_t begin_time = clock();
-        if (bSuccess == false)
+
+        if (frame.empty())
         {
             cout << "Unable to read file/n";
             cin.get(); // wait for any key press
             break;
         }
+
         detect_yolov5(frame, objects);
-        draw_objects(frame, objects);
         double dur = float(clock() - begin_time) / CLOCKS_PER_SEC;
+        draw_objects(frame, objects);
+        //double dur = float(clock() - begin_time)/CLOCKS_PER_SEC;
         std ::cout << "FPS : " << float(1 / dur) << "\n";
 
         //write the frame to the file
